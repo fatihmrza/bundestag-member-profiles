@@ -15,6 +15,6 @@ public interface Rede {
 
     int getLegislativePeriod();
 
-    int getContentId();
+    String getContentId();
 
 }

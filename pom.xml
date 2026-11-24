@@ -4,14 +4,92 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.example</groupId>
+    <groupId>org.texttechnologylab.ppr.NAME</groupId>
     <artifactId>Uebung3</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
+
+    <description>ENTER DESCRIPTION</description>
+
+    <licenses>
+        <license>
+            <name>AGPL-3.0-or-later</name>
+            <url>https://www.gnu.org/licenses/agpl.txt</url>
+            <distribution>repo</distribution>
+            <comments>GNU Affero General Public License v3.0 or later</comments>
+        </license>
+    </licenses>
+
+    <organization>
+        <name>Texttechnology Lab</name>
+        <url>https://www.texttechnologylab.org</url>
+    </organization>
+
+    <developers>
+        <developer>
+            <id>s6862028</id>
+            <name>Fatih Mirza</name>
+            <email>s6862028@stud.uni-frankfurt.de</email>
+            <organization>Goethe University Frankfurt</organization>
+            <roles>
+                <role>developer</role>
+            </roles>
+            <timezone>Europe/Berlin</timezone>
+        </developer>
+        <developer>
+            <id>ID</id>
+            <name>Nicolas Calderon</name>
+            <email>s3623554@stud.uni-frankfurt.de</email>
+            <organization>Goethe University Frankfurt</organization>
+            <roles>
+                <role>tutor</role>
+            </roles>
+            <timezone>Europe/Berlin</timezone>
+        </developer>
+    </developers>
+
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <version.utilities>a2213654f8</version.utilities>
     </properties>
-    
+
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.20.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.texttechnologylab</groupId>
+            <artifactId>PPRUtilities</artifactId>
+            <version>${version.utilities}</version>
+        </dependency>
+
+        <!-- Source: https://mvnrepository.com/artifact/org.mongodb/mongodb-driver-sync -->
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver-sync</artifactId>
+            <version>5.15.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>6.0.0</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
 </project>

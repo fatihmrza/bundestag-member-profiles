@@ -12,10 +12,10 @@ public class RedeFile implements Rede {
     LocalDate date;
     String agendaItem;
     int legislativePeriod;
-    int contentId;
+    String contentId;
 
 
-    private RedeFile(String content, int speakerId, LocalDate date, String agendaItem, int legislativePeriod, int contentId){
+    private RedeFile(String content, int speakerId, LocalDate date, String agendaItem, int legislativePeriod, String contentId){
         this.content = content;
         this.speakerId = speakerId;
         this.date = date;
@@ -44,8 +44,11 @@ public class RedeFile implements Rede {
         return this.legislativePeriod;
     }
 
-    public int getContentId(){
+    public String getContentId(){
         return this.contentId;
     }
 
+    protected static RedeFile createRede(String content, int speakerId, LocalDate date, String agendaItem, int legislativePeriod, String contentId){
+        return new RedeFile(content, speakerId, date, agendaItem, legislativePeriod, contentId);
+    }
 }

@@ -92,7 +92,7 @@ public class AbgeordneteFile implements Abgeordnete {
         return salutionTitle;
     }
 
-    public AbgeordneteFile createAbgeordneteFile(int id, String firstName, String lastName, String party, ArrayList<Integer> legislativePeriods, String profession,
+    protected static AbgeordneteFile createAbgeordneteFile(int id, String firstName, String lastName, String party, ArrayList<Integer> legislativePeriods, String profession,
                                                  LocalDate birthdate, String birthplace, String gender, LocalDate deathdate, String academicTitle, String salutionTitle){
         return new AbgeordneteFile(id,firstName, lastName, party, legislativePeriods, profession,birthdate, birthplace, gender,deathdate, academicTitle, salutionTitle);
     }
