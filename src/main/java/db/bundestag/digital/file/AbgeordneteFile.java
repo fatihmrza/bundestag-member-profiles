@@ -1,27 +1,29 @@
 package db.bundestag.digital.file;
 
 import db.bundestag.digital.data.Abgeordnete;
+import db.bundestag.digital.data.Rede;
 
-import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 public class AbgeordneteFile implements Abgeordnete {
 
-    int id;
-    String firstName;
-    String lastName;
-    String party;
-    ArrayList<Integer> legislativePeriods = new ArrayList<>();
-    String profession;
-    LocalDate birthdate;
-    String birthplace;
-    String gender;
-    LocalDate deathdate;
-    String academicTitle;
-    String salutionTitle;
+    private final int id;
+    private final String firstName;
+    private final String lastName;
+    private final String party;
+    private final ArrayList<Integer> legislativePeriods;
+    private final String profession;
+    private final LocalDate birthdate;
+    private final String birthplace;
+    private final String gender;
+    private final LocalDate deathdate;
+    private final String academicTitle;
+    private final String salutionTitle;
+    private final List<Rede> speeches;
 
-    private AbgeordneteFile(int id, String firstName, String lastName, String party, ArrayList<Integer> legislativePeriods, String profession, LocalDate birthdate, String birthplace, String gender, LocalDate deathdate, String academicTitle, String salutionTitle){
+    private AbgeordneteFile(int id, String firstName, String lastName, String party, ArrayList<Integer> legislativePeriods, String profession, LocalDate birthdate, String birthplace, String gender, LocalDate deathdate, String academicTitle, String salutionTitle, List<Rede> speeches){
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -34,6 +36,7 @@ public class AbgeordneteFile implements Abgeordnete {
         this.deathdate = deathdate;
         this.academicTitle = academicTitle;
         this.salutionTitle = salutionTitle;
+        this.speeches = speeches;
     }
 
     @Override
@@ -53,7 +56,7 @@ public class AbgeordneteFile implements Abgeordnete {
 
     @Override
     public String getParty(){
-        return this.lastName;
+        return this.party;
     }
 
     @Override
@@ -92,8 +95,12 @@ public class AbgeordneteFile implements Abgeordnete {
         return salutionTitle;
     }
 
+    public List<Rede> getSpeeches() {
+        return speeches;
+    }
+
     protected static AbgeordneteFile createAbgeordneteFile(int id, String firstName, String lastName, String party, ArrayList<Integer> legislativePeriods, String profession,
-                                                 LocalDate birthdate, String birthplace, String gender, LocalDate deathdate, String academicTitle, String salutionTitle){
-        return new AbgeordneteFile(id,firstName, lastName, party, legislativePeriods, profession,birthdate, birthplace, gender,deathdate, academicTitle, salutionTitle);
+                                                           LocalDate birthdate, String birthplace, String gender, LocalDate deathdate, String academicTitle, String salutionTitle, List<Rede> speeches){
+        return new AbgeordneteFile(id,firstName, lastName, party, legislativePeriods, profession,birthdate, birthplace, gender,deathdate, academicTitle, salutionTitle, speeches);
     }
 }
