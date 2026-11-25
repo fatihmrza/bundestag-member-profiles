@@ -99,6 +99,12 @@ public class AbgeordneteFile implements Abgeordnete {
         return speeches;
     }
 
+    @Override
+    public String toString(){
+        return ("id: " + this.id + " " + "name: " + this.firstName + " " + this.lastName + "party: "+ this.party + " " + "legislative periods: " + this.legislativePeriods.toString() + " " +
+                "profession: " + this.profession + " " + "birthdate: " + this.birthdate + " " + "birthplace: " + this.birthplace + " " + "gender: " + this.gender + " " + "deathdate: " + this.deathdate + " " + "academic title: " + this.academicTitle + " " + "salution title: " + this.salutionTitle);
+    }
+
     protected static AbgeordneteFile createAbgeordneteFile(int id, String firstName, String lastName, String party, ArrayList<Integer> legislativePeriods, String profession,
                                                            LocalDate birthdate, String birthplace, String gender, LocalDate deathdate, String academicTitle, String salutionTitle, List<Rede> speeches){
         return new AbgeordneteFile(id,firstName, lastName, party, legislativePeriods, profession,birthdate, birthplace, gender,deathdate, academicTitle, salutionTitle, speeches);

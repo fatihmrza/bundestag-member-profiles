@@ -47,6 +47,10 @@ public class RedeFile implements Rede {
     public String getContentId(){
         return this.contentId;
     }
+    @Override
+    public String toString(){
+        return ("content: " + this.content + " " +"speaker id: " + this.speakerId + " " + "date: " + this.date + " " + "agenda item: " + this.agendaItem + " " + "legislative period: " + this.legislativePeriod + " " + "contentId: " + this.contentId);
+    }
 
     protected static RedeFile createRede(String content, int speakerId, LocalDate date, String agendaItem, int legislativePeriod, String contentId){
         return new RedeFile(content, speakerId, date, agendaItem, legislativePeriod, contentId);

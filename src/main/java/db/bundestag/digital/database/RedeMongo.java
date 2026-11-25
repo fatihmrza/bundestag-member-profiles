@@ -1,5 +1,6 @@
 package db.bundestag.digital.database;
 import db.bundestag.digital.data.Rede;
+import db.bundestag.digital.file.RedeFile;
 import org.bson.Document;
 
 import java.time.LocalDate;
@@ -9,7 +10,7 @@ public class RedeMongo implements Rede{
     private final Document document;
 
 
-    protected RedeMongo(Document document){
+    private RedeMongo(Document document){
         this.document = document;
     }
 
@@ -43,6 +44,20 @@ public class RedeMongo implements Rede{
     }
 
 
+    public Document toDocument(RedeFile file){
+        String content = file.getContent();
+        int speakerId = file.getSpeakerId();
+        String agendaItem = file.getAgendaItem();
+        LocalDate date = file.getDate();
+        int legislativePeriod = file.getLegislativePeriod();
+        String contentId = file.getContentId();
 
+        return new Document().append("content", content)
+                .append("speakerId", speakerId)
+                .append("agenda_item", agendaItem)
+                .append("date", date)
+                .append("legislative_period", legislativePeriod)
+                .append("content_id", contentId);
+    }
 
 }
