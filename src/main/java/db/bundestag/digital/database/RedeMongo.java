@@ -4,6 +4,7 @@ import db.bundestag.digital.file.RedeFile;
 import org.bson.Document;
 
 import java.time.LocalDate;
+import java.time.ZoneOffset;
 
 public class RedeMongo implements Rede{
 
@@ -24,10 +25,12 @@ public class RedeMongo implements Rede{
         return document.getInteger("speaker_id");
     }
     @Override
-    public LocalDate getDate(){
-        return LocalDate.parse(this.document.getString("date"));
+    public LocalDate getDate() {
+        return LocalDate.ofInstant(
+                document.getDate("date").toInstant(),
+                ZoneOffset.UTC
+        );
     }
-
     @Override
     public String getAgendaItem(){
         return this.document.getString("agenda_item");

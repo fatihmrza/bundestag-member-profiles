@@ -1,9 +1,6 @@
 package db.bundestag.digital.factory;
 
-import com.mongodb.client.model.Accumulators;
-import com.mongodb.client.model.Aggregates;
-import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.Sorts;
+import com.mongodb.client.model.*;
 import db.bundestag.digital.data.Abgeordnete;
 import db.bundestag.digital.data.Rede;
 import db.bundestag.digital.database.AbgeordneteMongo;
@@ -11,6 +8,7 @@ import db.bundestag.digital.database.MongoDBConnector;
 import db.bundestag.digital.database.RedeMongo;
 import db.bundestag.digital.file.AbgeordneteFile;
 import db.bundestag.digital.file.FileReader;
+import db.bundestag.digital.htmlexport.HtmlExporter;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
@@ -22,9 +20,11 @@ import java.util.*;
 public class Factory {
 
     private final MongoDBConnector connector;
+    private final HtmlExporter exporter;
 
-    public Factory(MongoDBConnector connector){
+    public Factory(MongoDBConnector connector, HtmlExporter exporter){
         this.connector = connector;
+        this.exporter = exporter;
     };
 
     public void importData (String filePath) throws IOException {
@@ -122,32 +122,48 @@ public class Factory {
         return filterResults;
     }
 
-    public void exportData(String Path){
-        Map<Abgeordnete, List<Rede>> abgeordneteRedeMap = new LinkedHashMap<>();
-        List<Document> allDeputies = connector.find("abgeordneten", null);
-        for (Document deputy : allDeputies){
-            Abgeordnete abgeordnete = AbgeordneteMongo.toMongo(deputy);
-            List<Rede> listOfSpeeches = findBySpeech(deputy.getInteger("_id"));
-            abgeordneteRedeMap.put(abgeordnete, listOfSpeeches);
+    public void exportData(String path) throws IOException {
+        Map<String, Map<Abgeordnete, List<Rede>>> groups = new LinkedHashMap<>();
+        for (String party : getAllPartys()){
+            List<Bson> pipeline = List.of(
+                    Aggregates.match(Filters.eq("party", party)),
+                    Aggregates.lookup("reden", "_id", "speaker_id", "speeches"),
+                    Aggregates.addFields(new Field<>(
+                            "speechCount", new Document("$size", "$speeches"))),
+                    Aggregates.sort(Sorts.orderBy(
+                            Sorts.descending("speechCount"),
+                            Sorts.ascending("lastname", "_id")
+                    ))
+            );
+            Map<Abgeordnete, List<Rede>> cards = new LinkedHashMap<>();
 
+            for (Document deputy : connector.aggregate("abgeordneten", pipeline)){
+                List<Rede> speeches = new ArrayList<>();
+                for (Document speech : deputy.getList("speeches", Document.class)){
+                    speeches.add(RedeMongo.toMongo(speech));
+
+                }
+                cards.put(AbgeordneteMongo.toMongo(deputy), speeches);
+
+            }
+            groups.put(party, cards);
         }
 
-
-
+        exporter.exportHtml(groups, Path.of(path));
 
 
     }
 
 
-    private List<String> getAllPartys(){
+    private List<String> getAllPartys() {
         List<String> partyLists = new ArrayList<>();
         List<Bson> pipeline = List.of(Aggregates.group("$party"));
         List<Document> partys = connector.aggregate("abgeordneten", pipeline);
-        for (Document party : partys){
+        for (Document party : partys) {
             partyLists.add(party.getString("_id"));
 
-        return partyLists;
         }
+        return partyLists;
 
     }
 }

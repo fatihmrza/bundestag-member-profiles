@@ -6,6 +6,7 @@ import org.bson.Document;
 
 import java.lang.reflect.Array;
 import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,9 +42,13 @@ public class AbgeordneteMongo implements Abgeordnete {
         return document.getString("profession");
     }
 
-    public LocalDate getBirthdate(){
-        return LocalDate.parse(document.getString("birthdate"));
+    public LocalDate getBirthdate() {
+        return LocalDate.ofInstant(
+                document.getDate("birthdate").toInstant(),   // i did it because i accidentaly saved all informations related to LocalDate as LocalDate not as String thats why i had to convert Date into LocalDate instead of String to LocalDate with LocalDate.parse()
+                ZoneOffset.UTC
+        );
     }
+
 
     public String getBirthplace(){
         return document.getString("birthplace");
@@ -53,8 +58,11 @@ public class AbgeordneteMongo implements Abgeordnete {
         return document.getString("gender");
     }
 
-    public LocalDate getDeathdate(){
-        return LocalDate.parse(document.getString("deathdate"));
+    public LocalDate getDeathdate() {
+        return LocalDate.ofInstant(
+                document.getDate("deathdate").toInstant(),
+                ZoneOffset.UTC
+        );
     }
 
     public String getAcademicTitle(){
@@ -65,7 +73,7 @@ public class AbgeordneteMongo implements Abgeordnete {
         return document.getString("salution_title");
     }
 
-    public static Document toDocument(AbgeordneteFile file){
+    public static Document toDocument(Abgeordnete file){
         int id = file.getId();
         String firstName = file.getFirstName();
         String lastName = file.getLastName();
