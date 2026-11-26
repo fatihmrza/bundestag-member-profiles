@@ -1,7 +1,7 @@
 package db.bundestag.digital.data;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.List;
 
 public interface Abgeordnete {
 
@@ -14,7 +14,7 @@ public interface Abgeordnete {
 
     String getParty();
 
-    ArrayList<Integer> getLegislativePeriods();
+    List<Integer> getLegislativePeriods();
 
     String getProfession();
 

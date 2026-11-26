@@ -21,7 +21,7 @@ public class RedeMongo implements Rede{
 
     @Override
     public int getSpeakerId(){
-        return document.getInteger("id");
+        return document.getInteger("speaker_id");
     }
     @Override
     public LocalDate getDate(){
@@ -40,11 +40,11 @@ public class RedeMongo implements Rede{
 
     @Override
     public String getContentId(){
-        return this.document.getString("content_id");
+        return this.document.getString("_id");
     }
 
 
-    public Document toDocument(RedeFile file){
+    public static Document toDocument(Rede file){
         String content = file.getContent();
         int speakerId = file.getSpeakerId();
         String agendaItem = file.getAgendaItem();
@@ -52,12 +52,15 @@ public class RedeMongo implements Rede{
         int legislativePeriod = file.getLegislativePeriod();
         String contentId = file.getContentId();
 
-        return new Document().append("content", content)
-                .append("speakerId", speakerId)
+        return new Document("_id",contentId)
+                    .append("content", content)
+                .append("speaker_id", speakerId)
                 .append("agenda_item", agendaItem)
                 .append("date", date)
-                .append("legislative_period", legislativePeriod)
-                .append("content_id", contentId);
+                .append("legislative_period", legislativePeriod);
     }
 
+    public static RedeMongo toMongo(Document document){
+        return new RedeMongo(document);
+    }
 }

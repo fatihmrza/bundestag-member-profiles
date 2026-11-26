@@ -20,7 +20,7 @@ public class FileReader {
     }
 
 
-    public List<AbgeordneteFile> loadDocument(String filePath) throws IOException {
+    public static List<AbgeordneteFile> loadDocument(String filePath) throws IOException {
         DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd.MM.uuuu");
         File file = new File(filePath);
         JSONArray jsonArray = FileUtilities.readContentAsJSON(file);
@@ -71,7 +71,10 @@ public class FileReader {
 
 
 
-    private ArrayList<Integer> periodsToArray(JSONArray periodsJson){
+
+
+
+    private static ArrayList<Integer> periodsToArray(JSONArray periodsJson){
         ArrayList<Integer> periodsArray = new ArrayList<>();
         for (int i =0; i< periodsJson.length(); i++){
             periodsArray.add(periodsJson.getInt(i));

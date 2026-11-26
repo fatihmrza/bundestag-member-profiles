@@ -4,8 +4,10 @@ import db.bundestag.digital.data.Abgeordnete;
 import db.bundestag.digital.file.AbgeordneteFile;
 import org.bson.Document;
 
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 public class AbgeordneteMongo implements Abgeordnete {
 
@@ -31,7 +33,7 @@ public class AbgeordneteMongo implements Abgeordnete {
         return document.getString("party");
     }
 
-    public ArrayList<Integer> getLegislativePeriods(){
+    public List<Integer> getLegislativePeriods(){
         return new ArrayList<>(document.getList("legislative_periods", Integer.class));
     }
 
@@ -63,11 +65,12 @@ public class AbgeordneteMongo implements Abgeordnete {
         return document.getString("salution_title");
     }
 
-    public Document toDocument(AbgeordneteFile file){
+    public static Document toDocument(AbgeordneteFile file){
         int id = file.getId();
         String firstName = file.getFirstName();
         String lastName = file.getLastName();
         String party = file.getParty();
+        List<Integer> legislativePeriods = file.getLegislativePeriods();
         String profession = file.getProfession();
         LocalDate birthdate = file.getBirthdate();
         String birthplace = file.getBirthplace();
@@ -77,10 +80,11 @@ public class AbgeordneteMongo implements Abgeordnete {
         String salutionTitle = file.getSalutionTitle();
 
 
-        return new Document().append("id", id)
+        return new Document("_id", id)
                 .append("firstname", firstName)
                 .append("lastname", lastName)
                 .append("party", party)
+                .append("legislative_periods", legislativePeriods)
                 .append("profession", profession)
                 .append("birthdate", birthdate)
                 .append("birthplace", birthplace)
@@ -90,5 +94,8 @@ public class AbgeordneteMongo implements Abgeordnete {
                 .append("salution_title", salutionTitle);
     }
 
+    public static AbgeordneteMongo toMongo(Document document){
+        return new AbgeordneteMongo(document);
+    }
 
 }
