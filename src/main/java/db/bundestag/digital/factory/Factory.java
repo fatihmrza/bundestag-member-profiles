@@ -110,14 +110,14 @@ public class Factory {
     }
 
 
-    public Map<Integer, Integer> countAllSpeechesByDeputy(){
-        Map<Integer, Integer> filterResults = new LinkedHashMap<>();
+    public Map<Abgeordnete, Integer> countAllSpeechesByDeputy(){
+        Map<Abgeordnete, Integer> filterResults = new LinkedHashMap<>();
         List<Bson> pipeline = List.of(Aggregates.group("$speaker_id", Accumulators.sum("numberOfSpeech", 1)), Aggregates.sort(Sorts.descending("numberOfSpeech"))); // i did it for just self learning to know how aggregate methods working.
         List<Document> results = connector.aggregate("reden", pipeline);
         for (Document result: results){
-            int speakerId = result.getInteger("_id");
+            var speaker = AbgeordneteMongo.toMongo(result);
             int numberOfSpeech = result.getInteger("numberOfSpeech");
-            filterResults.put(speakerId, numberOfSpeech);
+            filterResults.put(speaker, numberOfSpeech);
         }
         return filterResults;
     }

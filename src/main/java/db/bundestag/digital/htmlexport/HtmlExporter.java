@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
-public class HtmlExporter implements HtmlExport{
+public class HtmlExporter implements HtmlExport {
 
     @Override
     public void exportHtml(Map<String, Map<Abgeordnete, List<Rede>>> abgeordneteRedeMap, Path outputPath) throws IOException {

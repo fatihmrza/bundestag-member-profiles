@@ -1,6 +1,7 @@
 package db.bundestag.digital.file;
 import db.bundestag.digital.data.Abgeordnete;
 import db.bundestag.digital.data.Rede;
+import db.bundestag.digital.exceptions.DataImportException;
 import org.bson.json.JsonObject;
 import org.json.JSONArray;
 import org.json.JSONObject;
