@@ -5,6 +5,7 @@ import com.mongodb.MongoWriteException;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
+import db.bundestag.digital.exceptions.DatabaseException;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
@@ -20,10 +21,13 @@ public class MongoDBConnector implements AutoCloseable{
     private final MongoClient client;
     private final MongoDatabase database;
 
-    public MongoDBConnector(Path configFile) throws IOException {
+    public MongoDBConnector(Path configFile) throws DatabaseException {
         Properties config = new Properties();
         try (BufferedReader reader = Files.newBufferedReader(configFile)){
             config.load(reader);
+        }
+        catch (IOException e){
+            throw new DatabaseException("Configuration file could not be read.", e);
         }
         this.client = MongoClients.create(config.getProperty("mongo.uri"));
         this.database = this.client.getDatabase(config.getProperty("mongo.database"));

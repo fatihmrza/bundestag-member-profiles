@@ -6,6 +6,8 @@ import db.bundestag.digital.data.Rede;
 import db.bundestag.digital.database.AbgeordneteMongo;
 import db.bundestag.digital.database.MongoDBConnector;
 import db.bundestag.digital.database.RedeMongo;
+import db.bundestag.digital.exceptions.DataExportException;
+import db.bundestag.digital.exceptions.DataImportException;
 import db.bundestag.digital.file.AbgeordneteFile;
 import db.bundestag.digital.file.FileReader;
 import db.bundestag.digital.htmlexport.HtmlExporter;
@@ -27,29 +29,37 @@ public class Factory {
         this.exporter = exporter;
     };
 
-    public void importData (String filePath) throws IOException {
+    public void importData (String filePath) throws DataImportException {
         int totalSpeeches = 0;
         int countSpeech = 0;
         int countDeputy = 0;
-        List<AbgeordneteFile> deputies = FileReader.loadDocument(filePath);
-        for (AbgeordneteFile deputy : deputies){
-            Document newAbgeordnete = AbgeordneteMongo.toDocument(deputy);
-            boolean insertedDeputy = connector.insertIfAbsent("abgeordneten", newAbgeordnete);
-            if (insertedDeputy){
-                countDeputy += 1;
-            }
-            for (Rede speech : deputy.getSpeeches()){
-                totalSpeeches += 1;
-                Document newSpeech = RedeMongo.toDocument(speech);
-                boolean insertedRede = connector.insertIfAbsent("reden", newSpeech);
-                if (insertedRede){
-                    countSpeech += 1;
-                }
-            }
+        try {
+            List<AbgeordneteFile> deputies = FileReader.loadDocument(filePath);
 
+            for (AbgeordneteFile deputy : deputies) {
+                Document newAbgeordnete = AbgeordneteMongo.toDocument(deputy);
+                System.out.println("giris");
+                boolean insertedDeputy = connector.insertIfAbsent("abgeordneten", newAbgeordnete);
+                System.out.println("cikis");
+                if (insertedDeputy) {
+                    countDeputy += 1;
+                }
+                for (Rede speech : deputy.getSpeeches()) {
+                    totalSpeeches += 1;
+                    Document newSpeech = RedeMongo.toDocument(speech);
+                    boolean insertedRede = connector.insertIfAbsent("reden", newSpeech);
+                    if (insertedRede) {
+                        countSpeech += 1;
+                    }
+                }
+
+            }
+            System.out.printf("Abgeordnete: %d read, %d added, %d already exist. \n", deputies.size(), countDeputy, (deputies.size() - countDeputy));
+            System.out.printf("Rede: %d read, %d added, %d already exist. \n ", totalSpeeches, countSpeech, (totalSpeeches - countSpeech));
         }
-        System.out.printf("Abgeordnete: %d read, %d added, %d already exist. \n", deputies.size(), countDeputy, (deputies.size()-countDeputy));
-        System.out.printf("Rede: %d read, %d added, %d already exist. \n ", totalSpeeches, countSpeech, (totalSpeeches - countSpeech));
+        catch (IOException e){
+            throw new DataImportException("The file with this path could not be imported", e);
+        }
 
 
     }
@@ -122,7 +132,7 @@ public class Factory {
         return filterResults;
     }
 
-    public void exportData(String path) throws IOException {
+    public void exportData(String path) throws DataExportException {
         Map<String, Map<Abgeordnete, List<Rede>>> groups = new LinkedHashMap<>();
         for (String party : getAllPartys()){
             List<Bson> pipeline = List.of(
@@ -148,9 +158,11 @@ public class Factory {
             }
             groups.put(party, cards);
         }
-
-        exporter.exportHtml(groups, Path.of(path));
-
+        try {
+            exporter.exportHtml(groups, Path.of(path));
+        } catch (IOException e) {
+            throw new DataExportException("Data's in this path could not be exported", e);
+        }
 
     }
 
