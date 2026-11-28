@@ -1,0 +1,49 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+
+\title{Uebung3}
+\author{Fatih Mirza \\ 8500551}
+\usepackage{tikz}
+\usepackage{tikz-uml}
+\usetikzlibrary{positioning}
+\usepackage[left=1.5cm, right=1.5cm, top=1.5cm, bottom=1.5cm, includeheadfoot]{geometry}
+\date{28 November 2026}
+\usepackage{ulem}
+
+\begin{document}
+
+\maketitle
+
+
+\section*{UML-Diagramms}
+\begin{tikzpicture}
+\begin{umlpackage}[name=bundestagdigital]{db.bundestag.digital}
+\begin{umlpackage}[x=0, y=3, name=data]{data}
+\umlclass[x=0, y=0, name = abgeordnete, scale=0.5, type = interface]{Abgeordnete}{}{getId(): int \\ getFirstName(): String \\ getLastName(): String \\ getParty(): String \\ getLegislativePeriods(): List$<$Integer$>$ \\ getProfession(): String \\ getBirthdate(): LocalDate \\ getBirthplace(): LocalDate \\ getGender(): String \\ getDeathdate(): LocalDate \\ getAcademicTitle(): String \\ getSalutionTitle(): String}
+\umlclass[x=4, y=0.3, name = rede, scale = 0.5, type = interface]{Rede}{}{getContent(): String \\ getSpeakerId(): int \\ getDate(): LocalDate \\ getAgendaItem(): String \\ getLegislativePeriod(): int \\ getContentId(): String}
+\end{umlpackage}
+\begin{umlpackage}[x=9, y=0, name = database]{database}
+\umlclass[x=0, y=0, name= abgeordneteMongo, scale = 0.5]{AbgeordneteMongo}{-document: Document {"Read Only"}}{+getFirstName(): String \\ +getLastName(): String \\ +getParty(): String \\ +getLegislativePeriods(): List$<$Integer$>$ \\ +getProfession(): String \\ +getBirthdate(): LocalDate \\ +getBirthplace(): String \\ +getGender(): String \\ +getDeathdate: LocalDate \\ +getAcademicTitle(): String \\ +getSalutionTitle(): String \\ +\uline{toDocument(Abgeordnete file): Document} \\ +\uline{toMongo(Document): AbgeordneteMongo}}
+\umlclass[x=0, y=3, name=redeMongo, scale = 0.5]{RedeMongo}{-document: Document {"Read Only"}}{+getContent(): String \\ +getSpeakerId(): int \\ +getDate(): LocalDate \\ +getAgendaItem(): String \\ +getLegislativePeriod(): int \\ +getContentId(): String \\ +\uline{toDocument(Rede file): Document} \\ +\uline{toMongo(Document): RedeMongo}} 
+\umlclass[x=5, y=-0.5, name=connector, scale=0.5]{MongoDBConnector}{-client: MongoClient {"Read Only"} \\ -database: MongoDatabase {"Read Only"}}{+MongoDBConnector(Path configFile): MongoDBConnector \\ +insertIfAbsent(...): boolean \\ +find(...): List$<$Document$>$ \\ +countDocument(...): long \\ +aggregate(...): List$<$Document$>$ \\ +close(): void}
+\end{umlpackage}
+\begin{umlpackage}[x=0, y=-10, name = exceptions]{exceptions}
+\umlclass[x=0, y=0, name = dataexception, scale = 0.5]{DatabaseException}{}{+DatabaseException(...): DatabaseException}
+\umlclass[x=5, y=0, name = exportexception, scale = 0.5]{DatabaseExportException}{}{+DatabaseExportException(...): DatabaseExportException}
+\umlclass[x=0, y=1, name = importexception, scale = 0.5]{DatabaseImportException}{}{+DatabaseImportException(...): DatabaseImportException}
+\umlclass[x=5, y=1, name = inputtexception, scale = 0.5]{InvalidInputException}{}{+InvalidInputException(...): InvalidInputException}
+
+\end{umlpackage}
+\begin{umlpackage}[x=5, y=-4, name = factory]{factory}
+
+\end{umlpackage}
+
+\end{umlpackage}
+
+\end{tikzpicture}
+\newpage	
+
+
+
+
+\end{document}
